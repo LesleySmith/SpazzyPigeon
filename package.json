@@ -1,0 +1,15 @@
+{
+  "name": "stackathon",
+  "version": "1.0.0",
+  "description": "Phaser project",
+  "main": "index.js",
+  "dependencies": {
+    "phaser": "^3.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lesley Smith",
+  "license": "ISC"
+}
