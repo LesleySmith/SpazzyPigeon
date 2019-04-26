@@ -33,7 +33,8 @@
     };
 
     var player;
-    var mushrooms;
+    var gems;
+    var stars;
     var platforms;
     var score = 0;
     var gameOver = false;
@@ -44,13 +45,18 @@
     function preload()
     {
         this.load.image('city', 'assets/city.png');
-        this.load.image('ground', 'assets/ground.png');
+        this.load.image('crate', 'assets/big-crate.png');
         this.load.image('floor', 'assets/platform.png');
-        this.load.image('mushroom', 'assets/mushroom-red.png');
+        this.load.image('gem', 'assets/gem-1.png');
+        this.load.image('star', 'assets/star-1.png');
         this.load.spritesheet('pigeon',
             'assets/pigeon.png',
             { frameWidth: 32, frameHeight: 33 }
         );
+        this.load.audio('song', ['assets/sounds/platformer_level03_loop.ogg']);
+        this.load.audio('collect', ['assets/sounds/NFF-bubbly.wav']);
+        this.load.audio('bounce', ['assets/sounds/NFF-bounce.wav']);
+        this.load.audio('death', ['assets/sounds/NFF-double-whip.wav']);
     }
 
     function create ()
@@ -92,30 +98,46 @@
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        mushrooms = this.physics.add.group({
-            key: 'mushroom',
+        gems = this.physics.add.group({
+            key: 'gem',
             repeat: 11,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
 
-        mushrooms.children.iterate(function (child) {
+        gems.children.iterate(function (child) {
 
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
         });
 
+        stars = this.physics.add.group();
+
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
         this.physics.add.collider(player, platforms);
-        this.physics.add.collider(mushrooms, platforms);
+        this.physics.add.collider(gems, platforms);
+        this.physics.add.collider(stars, platforms);
+        this.physics.add.collider(player, stars, hitStar, null, this);
 
-        this.physics.add.overlap(player, mushrooms, collectMushrooms, null, this);
+        this.physics.add.overlap(player, gems, collectGems, null, this);
+
+        this.music = this.sound.add('song');
+        this.soundEffect = this.sound.add('collect');
+        this.deadEffect = this.sound.add('death');
+        this.jumpEffect = this.sound.add('bounce');
+        this.music.loop = true;
+        this.music.play();
 
 
     }
 
     function update ()
     {
+        if (gameOver)
+        {
+            location.reload();
+        }
+
         if (cursors.left.isDown)
         {
             player.setVelocityX(-160);
@@ -138,25 +160,47 @@
         if (cursors.up.isDown && player.body.touching.down)
         {
             player.setVelocityY(-330);
+            this.jumpEffect.play();
         }
     }
 
-    function collectMushrooms (player, mushroom)
+    function collectGems (player, gem)
     {
-        mushroom.disableBody(true, true);
+        gem.disableBody(true, true);
+        this.soundEffect.play();
 
         score += 10;
         scoreText.setText('Score: ' + score);
 
-        if (mushrooms.countActive(true) === 0)
+        if (gems.countActive(true) === 0)
         {
-            mushrooms.children.iterate(function (child) {
+            gems.children.iterate(function (child) {
 
                 child.enableBody(true, child.x, 0, true, true);
 
             });
 
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+            var star = stars.create(x, 16, 'star');
+            star.setBounce(1);
+            star.setCollideWorldBounds(true);
+            star.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            star.allowGravity = false;
         }
+    }
+
+    function hitStar (player, star)
+    {
+        this.deadEffect.play();
+
+        this.physics.pause();
+
+        player.setTint(0xff0000);
+
+        player.anims.play('turn');
+
+        gameOver = true;
     }
 
 </script>
