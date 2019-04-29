@@ -45,8 +45,10 @@
     function preload()
     {
         this.load.image('city', 'assets/city.png');
-        this.load.image('crate', 'assets/big-crate.png');
+        this.load.image('tree', 'assets/tree.png');
         this.load.image('floor', 'assets/platform.png');
+        this.load.image('crate', 'assets/big-crate.png');
+        this.load.image('ledge', 'assets/platform-long.png')
         this.load.image('gem', 'assets/gem-1.png');
         this.load.image('star', 'assets/star-1.png');
         this.load.spritesheet('pigeon',
@@ -63,13 +65,46 @@
     {
         this.add.image(400, 300, 'city');
 
+        this.add.image(200, 490, 'tree');
+
         platforms = this.physics.add.staticGroup();
 
         platforms.create(400, 568, 'floor').setScale(2).refreshBody();
 
-        platforms.create(600, 400, 'floor');
-        platforms.create(50, 250, 'floor');
-        platforms.create(750, 220, 'floor');
+        // FIRST PLATFORM
+        platforms.create(700, 400, 'crate');
+        platforms.create(600, 400, 'crate');
+        platforms.create(630, 400, 'crate');
+        platforms.create(660, 400, 'crate');
+        platforms.create(690, 400, 'crate');
+        platforms.create(720, 400, 'crate');
+        platforms.create(750, 400, 'crate');
+        platforms.create(780, 400, 'crate');
+        platforms.create(570, 400, 'crate');
+        platforms.create(540, 400, 'crate');
+        platforms.create(510, 400, 'crate');
+
+        // SECOND PLATFORM
+        platforms.create(50, 250, 'ledge');
+        platforms.create(20, 250, 'ledge');
+        platforms.create(80, 250, 'ledge');
+        platforms.create(110, 250, 'ledge');
+        platforms.create(140, 250, 'ledge');
+        platforms.create(170, 250, 'ledge');
+        platforms.create(200, 250, 'ledge');
+        platforms.create(230, 250, 'ledge');
+        platforms.create(260, 250, 'ledge');
+
+        //THIRD PLATFORM
+        platforms.create(570, 220, 'ledge');
+        platforms.create(600, 220, 'ledge');
+        platforms.create(630, 220, 'ledge');
+        platforms.create(660, 220, 'ledge');
+        platforms.create(690, 220, 'ledge');
+        platforms.create(720, 220, 'ledge');
+        platforms.create(750, 220, 'ledge');
+        platforms.create(780, 220, 'ledge');
+
 
         player = this.physics.add.sprite(100, 450, 'pigeon');
 
