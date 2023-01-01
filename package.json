@@ -4,7 +4,7 @@
   "description": "Phaser project",
   "main": "index.js",
   "dependencies": {
-    "phaser": "^3.16.2"
+    "phaser": "^3.55.2"
   },
   "devDependencies": {},
   "scripts": {
